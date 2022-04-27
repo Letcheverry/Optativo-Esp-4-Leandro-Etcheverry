@@ -1,5 +1,7 @@
 # Optativo-Esp-4-Leandro-Etcheverry
 
+Alumno: Leandro Etcheverry Villagrán
+
 WebScrapping a SoloTodo, tarjetas de video.
 
 Pregunta que motivo al Web Scrapping
