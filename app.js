@@ -47,9 +47,6 @@ const scrapStart = async ()=>{
 
         await page.goto(url+"page="+i)
 
-
-
-
     }
 
     console.log(gpus.length);
@@ -59,11 +56,6 @@ const scrapStart = async ()=>{
     await csv.toDisk('./SolotodoGpuList.csv');
 
     await browser.close();
-
-
-
-
-
 
 }
 
