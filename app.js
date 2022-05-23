@@ -16,31 +16,37 @@ const scrapStart = async ()=>{
 
     await page.waitForSelector('[id="category-browse-results-card"]');
 
-    const categoryElement = await page.evaluate(()=>document.getElementById('category-browse-results-card').innerHTML);
-
-    const parsedContext = htmlParser.parse(categoryElement);
-
-    const a = parsedContext.querySelectorAll('.category-browse-result')
-
     const gpus= []
 
-    const number = (parsedContext.querySelector('.category-browse-pagination').querySelectorAll('li').length -1);
+    const categoria = await page.evaluate(()=>document.getElementById('category-browse-results-card').innerHTML)
 
-    const limit = parsedContext.querySelector('.category-browse-pagination').querySelectorAll('li')[number-1].innerText
+    const numeracion = htmlParser.parse(categoria);
 
+    const number = (numeracion.querySelector('.category-browse-pagination').querySelectorAll('li').length -1);
+
+    const limit = numeracion.querySelector('.category-browse-pagination').querySelectorAll('li')[number-1].innerText
+
+    const regex = /[$ .]/gm;
 
 
     for (let i = 2; i <= limit; i++) {
 
+        const categoryElement = await page.evaluate(()=>document.getElementById('category-browse-results-card').innerHTML);
+
+        const parsedContext = htmlParser.parse(categoryElement);
+
+        const a = parsedContext.querySelectorAll('.category-browse-result')
+
         for (const htmlGpu of a) {
 
-            gpus.push({
-                title:htmlGpu.querySelectorAll('dd')[0].innerText,
-                memory: htmlGpu.querySelectorAll('dd')[1].innerText,
-                price: htmlGpu.querySelector('.price').innerText,
-                image: htmlGpu.querySelector('.image-container').querySelector('img').attributes['src']
-            })
 
+            gpus.push({
+                title: htmlGpu.querySelectorAll('dd')[0].innerText,
+                memory: htmlGpu.querySelectorAll('dd')[1].innerText,
+                price: parseFloat((htmlGpu.querySelector('.price').innerText).replace(regex, "")),
+                //image: htmlGpu.querySelector('.image-container').querySelector('img').attributes['src']
+            })
+//querySelector('a')
 
 
         }
@@ -53,7 +59,7 @@ const scrapStart = async ()=>{
 
     const csv = new ObectsToCsv(gpus)
 
-    await csv.toDisk('./SolotodoGpuList.csv');
+    await csv.toDisk('./SolotodoGpuList.csv',{append: false});
 
     await browser.close();
 
