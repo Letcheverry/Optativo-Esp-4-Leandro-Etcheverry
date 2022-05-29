@@ -28,6 +28,9 @@ const scrapStart = async ()=>{
 
     const regex = /[$ .]/gm;
 
+    const dateObject = new Date();
+    const date = (dateObject.getDate() +"-"+ dateObject.getMonth() +"-"+ dateObject.getFullYear());
+
 
     for (let i = 2; i <= limit; i++) {
 
@@ -44,6 +47,7 @@ const scrapStart = async ()=>{
                 title: htmlGpu.querySelectorAll('dd')[0].innerText,
                 memory: htmlGpu.querySelectorAll('dd')[1].innerText,
                 price: parseFloat((htmlGpu.querySelector('.price').innerText).replace(regex, "")),
+                date: date
                 //image: htmlGpu.querySelector('.image-container').querySelector('img').attributes['src']
             })
 //querySelector('a')
@@ -59,7 +63,7 @@ const scrapStart = async ()=>{
 
     const csv = new ObectsToCsv(gpus)
 
-    await csv.toDisk('./SolotodoGpuList.csv',{append: false});
+    await csv.toDisk('./SolotodoGpuList.csv',{append: true});
 
     await browser.close();
 
